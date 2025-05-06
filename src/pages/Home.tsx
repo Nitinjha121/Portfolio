@@ -33,8 +33,8 @@ export default function Home() {
             variants={itemVariants}
             className="text-lg text-muted-foreground"
           >
-            Building modern web applications with passion and precision.
-            Transforming ideas into seamless digital experiences.
+            Helping businesses build scalable web solutions. Specializing in modern web applications 
+            that drive business growth and user engagement.
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex gap-4">
@@ -55,7 +55,7 @@ export default function Home() {
             variants={itemVariants}
             className="flex flex-wrap gap-3 mt-8"
           >
-            {["React", "Node.js", "TypeScript", "AWS"].map((tech) => (
+            {["Enterprise Solutions", "Scalable Architecture", "User-Centric Design", "Performance Optimization"].map((tech) => (
               <span
                 key={tech}
                 className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary dark:bg-primary/20"

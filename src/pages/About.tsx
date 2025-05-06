@@ -79,42 +79,32 @@ export default function About() {
           )}
         </motion.div>
 
-        {/* <motion.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="glassmorphism rounded-xl p-8"
+          className="glassmorphism rounded-xl p-8 mb-8"
         >
-          <h2 className="text-2xl font-semibold mb-4">Experience</h2>
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              <div className="w-1 bg-primary rounded"></div>
-              <div>
-                <h3 className="text-xl font-semibold">
-                  Senior Full Stack Developer
-                </h3>
-                <p className="text-muted-foreground">Tech Solutions Inc.</p>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>2020 - Present</span>
-                </div>
-              </div>
+          <h2 className="text-2xl font-semibold mb-4">Services</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <h3 className="text-xl font-medium">Web Application Development</h3>
+              <p className="text-muted-foreground">Custom, scalable solutions tailored to your business needs</p>
             </div>
-            <div className="flex gap-4">
-              <div className="w-1 bg-primary rounded"></div>
-              <div>
-                <h3 className="text-xl font-semibold">Full Stack Developer</h3>
-                <p className="text-muted-foreground">
-                  Digital Innovations Ltd.
-                </p>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>2018 - 2020</span>
-                </div>
-              </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-medium">Technical Consultation</h3>
+              <p className="text-muted-foreground">Expert guidance on architecture and technology choices</p>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-medium">Performance Optimization</h3>
+              <p className="text-muted-foreground">Improving speed and efficiency of existing applications</p>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-medium">API Development & Integration</h3>
+              <p className="text-muted-foreground">Connecting systems and streamlining workflows</p>
             </div>
           </div>
-        </motion.div> */}
+        </motion.div>
       </motion.div>
     </div>
   );

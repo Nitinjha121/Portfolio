@@ -28,4 +28,4 @@ export const paragraphAboutMe = [
 export const OWNER_NAME = "Nitin Jha";
 export const OWNER_LOCATION = "Mumbai, India";
 export const OWNER_IMAGE_URL =
-  "https://ik.imagekit.io/kggne4pv7or/Portfolio/0_I4huY30TR.png";
+  "https://ik.imagekit.io/kggne4pv7or/Portfolio/file_00000000c0f051f7ab13b78712f94a2f_conversation_id=67e8dd10-78c4-8010-933b-b621cb8f8c07&message_id=74349f5d-c398-47a7-8bdf-f1c09eb5ecb4__wvVp33tD.webp";

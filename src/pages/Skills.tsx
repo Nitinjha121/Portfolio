@@ -5,6 +5,7 @@ import SkillCard from "@/components/SkillCard";
 import { skills } from "@/constants/skills";
 import { SkillFilterCategory } from "@/enum";
 import { motion } from "framer-motion";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export default function Skills() {
   const [search, setSearch] = useState("");
@@ -38,19 +39,21 @@ export default function Skills() {
           className="sm:max-w-[300px]"
         />
 
-        <Tabs value={category} onValueChange={setCategory}>
-          <TabsList>
-            {Object.values(SkillFilterCategory).map((categoryName) => (
-              <TabsTrigger
-                isActive={categoryName === category}
-                value={categoryName}
-              key={categoryName}
-              >
-                {categoryName}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        <ScrollArea className="w-full overflow-x-auto">
+          <Tabs value={category} onValueChange={setCategory}>
+            <TabsList>
+              {Object.values(SkillFilterCategory).map((categoryName) => (
+                <TabsTrigger
+                  isActive={categoryName === category}
+                  value={categoryName}
+                  key={categoryName}
+                >
+                  {categoryName}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </ScrollArea>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

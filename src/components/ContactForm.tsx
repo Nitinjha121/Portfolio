@@ -1,8 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
 import {
   Form,
   FormControl,
@@ -11,124 +9,103 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { insertMessageSchema } from "@/validators/schema";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  insertMessageSchema,
+  InsertMessage as FormData,
+} from "@/validators/schema";
 import { Button } from "@/components/ui/button";
-import { CONTACT_FORM_URL } from "@/constants/urls";
+import { contactFormFields } from "@/constants";
+import { FormFieldComponent } from "@/components/ui/form-field";
 
 export default function ContactForm() {
   const { toast } = useToast();
-  const form = useForm({
+  const form = useForm<FormData>({
     resolver: zodResolver(insertMessageSchema),
     defaultValues: {
       name: "",
       email: "",
       subject: "",
       message: "",
+      projectType: "",
+      budget: "",
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: async (data: any) => {
-      await apiRequest("POST", CONTACT_FORM_URL, data);
-    },
-    onSuccess: () => {
+  const handleSubmit = async (data: FormData) => {
+    try {
+      // HubSpot form submission
+      const portalId = import.meta.env.VITE_HUBSPOT_PORTAL_ID;
+      const formId = import.meta.env.VITE_HUBSPOT_FORM_ID;
+
+      const url = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
+
+      const hubspotData = {
+        fields: [
+          { name: "firstName", value: data.name },
+          { name: "email", value: data.email },
+          { name: "subject", value: data.subject },
+          { name: "message", value: data.message },
+          { name: "projectType", value: data.projectType },
+          { name: "estimatedbudgetrange", value: data.budget },
+        ],
+        context: {
+          pageUri: window.location.href,
+          pageName: document.title,
+        },
+      };
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(hubspotData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit form");
+      }
+
       toast({
         title: "Message sent",
         description: "Thank you for your message. I'll get back to you soon!",
       });
       form.reset();
-    },
-    onError: () => {
+    } catch (error) {
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
         variant: "destructive",
       });
-    },
-  });
+    }
+  };
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
-        className="space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Your name"
-                  {...field}
-                  className="border-2 dark:border-gray-700 dark:focus:border-gray-600 transition-colors"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        {contactFormFields.map((fieldConfig) => (
+          <FormField
+            key={fieldConfig.name}
+            control={form.control}
+            name={fieldConfig.name}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{fieldConfig.label}</FormLabel>
+                <FormControl>
+                  <FormFieldComponent field={field} config={fieldConfig} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="your.email@example.com"
-                  {...field}
-                  className="border-2 dark:border-gray-700 dark:focus:border-gray-600 transition-colors"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="subject"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Subject</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Message subject"
-                  {...field}
-                  className="border-2 dark:border-gray-700 dark:focus:border-gray-600 transition-colors"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Message</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Your message"
-                  className="min-h-[120px] border-2 dark:border-gray-700 dark:focus:border-gray-600 transition-colors"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="w-full" disabled={mutation.isPending}>
-          {mutation.isPending ? "Sending..." : "Send Message"}
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? "Sending..." : "Send Message"}
         </Button>
       </form>
     </Form>
